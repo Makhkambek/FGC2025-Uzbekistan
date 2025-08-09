@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Controllers.DrumIntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.HangController;
-import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
+import org.firstinspires.ftc.teamcode.Controllers.ArmIntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.ResetController;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
 import org.firstinspires.ftc.teamcode.SubSystems.DrumIntake;
@@ -28,7 +28,7 @@ public class TeleOp extends LinearOpMode {
 
         DrumIntakeController drumController = new DrumIntakeController(drumIntake, gamepad2Ex);
         HangController hangController = new HangController(hang, gamepad2Ex);
-        IntakeController intakeController = new IntakeController(armIntake, gamepad2Ex);
+        ArmIntakeController ArmIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
         ResetController resetController = new ResetController(drumIntake, hang, armIntake, gamepad2Ex);
 
         boolean wasRightTriggerPressed = false;
@@ -40,7 +40,7 @@ public class TeleOp extends LinearOpMode {
 
             drumController.update();
             hangController.update();
-            intakeController.update();
+            ArmIntakeController.update();
             resetController.update();
 
             boolean isRightTriggerPressed = gamepad1Ex.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2;

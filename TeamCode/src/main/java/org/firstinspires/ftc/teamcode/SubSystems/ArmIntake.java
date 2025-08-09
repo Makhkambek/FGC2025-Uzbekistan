@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,8 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class ArmIntake extends SubsystemBase {
     private Servo servo1;
     private Servo servo2;
-    private Servo servo3;
-    private Servo servo4;
+    private CRServo servo3;
+    private CRServo servo4;
 
     public enum ArmState {
         UP,
@@ -32,8 +33,8 @@ public class ArmIntake extends SubsystemBase {
     public ArmIntake(HardwareMap hardwareMap) {
         servo1 = hardwareMap.get(Servo.class, "servo1");
         servo2 = hardwareMap.get(Servo.class, "servo2");
-        servo3 = hardwareMap.get(Servo.class, "servo3");
-        servo4 = hardwareMap.get(Servo.class, "servo4");
+        servo3 = hardwareMap.get(CRServo.class, "servo3");
+        servo4 = hardwareMap.get(CRServo.class, "servo4");
 
         stop();
     }
@@ -55,8 +56,8 @@ public class ArmIntake extends SubsystemBase {
                         break;
                     case 1:
                         if (timer.seconds() > UP_GRIPPER_DELAY_SECONDS) {
-                            servo3.setPosition(GRIPPER_OPEN_POSITION);
-                            servo4.setPosition(GRIPPER_OPEN_POSITION);
+                            servo3.setPower(1.0);
+                            servo4.setPower(1.0);
                             currentState = ArmState.IDLE;
                             subState = 0;
                         }
@@ -66,8 +67,8 @@ public class ArmIntake extends SubsystemBase {
             case DOWN:
                 switch (subState) {
                     case 0:
-                        servo3.setPosition(GRIPPER_CLOSED_POSITION);
-                        servo4.setPosition(GRIPPER_CLOSED_POSITION);
+                        servo3.setPower(0.0);
+                        servo4.setPower(0.0);
                         timer.reset();
                         subState++;
                         break;
@@ -90,8 +91,8 @@ public class ArmIntake extends SubsystemBase {
     public void stop() {
         servo1.setPosition(IDLE_POSITION);
         servo2.setPosition(IDLE_POSITION);
-        servo3.setPosition(IDLE_POSITION);
-        servo4.setPosition(IDLE_POSITION);
+        servo3.setPower(0.0);
+        servo4.setPower(0.0);
         currentState = ArmState.IDLE;
         subState = 0;
     }

@@ -7,13 +7,13 @@ import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
 import org.firstinspires.ftc.teamcode.Commands.ArmUpCommand;
 import org.firstinspires.ftc.teamcode.Commands.ArmDownCommand;
 
-public class IntakeController {
+public class ArmIntakeController {
     private final ArmIntake armIntake;
     private final GamepadEx gamepad;
     private int leftBumperToggle = 0;
     private boolean wasLeftBumperPressed = false;
 
-    public IntakeController(ArmIntake armIntake, GamepadEx gamepad) {
+    public ArmIntakeController(ArmIntake armIntake, GamepadEx gamepad) {
         this.armIntake = armIntake;
         this.gamepad = gamepad;
     }
