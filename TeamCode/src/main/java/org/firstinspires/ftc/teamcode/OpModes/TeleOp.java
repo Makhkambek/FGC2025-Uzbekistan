@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.DrumIntake;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.SubSystems.Hang;
 
+@Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends LinearOpMode {
     @Override

@@ -2,29 +2,25 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DrumIntake extends SubsystemBase {
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    private DcMotorEx drumMotor;
 
     public DrumIntake(HardwareMap hardwareMap) {
         super();
-        leftMotor = hardwareMap.get(DcMotor.class, "drumLeft");
-        rightMotor = hardwareMap.get(DcMotor.class, "drumRight");
+        drumMotor = hardwareMap.get(DcMotorEx.class, "drumLeft");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        drumMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drumMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         stop();
     }
 
     public void setPower(double power) {
-        leftMotor.setPower(power);
-        rightMotor.setPower(power);
+        drumMotor.setPower(power);
     }
 
     public void stop() {

@@ -20,8 +20,8 @@ public class ArmIntake extends SubsystemBase {
 
     private static final double ARM_UP_POSITION = 1.0;
     private static final double ARM_DOWN_POSITION = 0.0;
-    private static final double GRIPPER_OPEN_POSITION = 1.0;
-    private static final double GRIPPER_CLOSED_POSITION = 0.0;
+    private static final double GRIPPER_ON = 1.0;
+    private static final double GRIPPER_OFF = 0.0;
     private static final double IDLE_POSITION = 0.0;
     private static final double UP_GRIPPER_DELAY_SECONDS = 2.0;
     private static final double DOWN_ARM_DELAY_SECONDS = 0.5;
@@ -56,8 +56,8 @@ public class ArmIntake extends SubsystemBase {
                         break;
                     case 1:
                         if (timer.seconds() > UP_GRIPPER_DELAY_SECONDS) {
-                            servo3.setPower(1.0);
-                            servo4.setPower(1.0);
+                            servo3.setPower(GRIPPER_ON);
+                            servo4.setPower(GRIPPER_ON);
                             currentState = ArmState.IDLE;
                             subState = 0;
                         }
@@ -67,8 +67,8 @@ public class ArmIntake extends SubsystemBase {
             case DOWN:
                 switch (subState) {
                     case 0:
-                        servo3.setPower(0.0);
-                        servo4.setPower(0.0);
+                        servo3.setPower(GRIPPER_OFF);
+                        servo4.setPower(GRIPPER_OFF);
                         timer.reset();
                         subState++;
                         break;
@@ -91,8 +91,8 @@ public class ArmIntake extends SubsystemBase {
     public void stop() {
         servo1.setPosition(IDLE_POSITION);
         servo2.setPosition(IDLE_POSITION);
-        servo3.setPower(0.0);
-        servo4.setPower(0.0);
+        servo3.setPower(GRIPPER_OFF);
+        servo4.setPower(GRIPPER_OFF);
         currentState = ArmState.IDLE;
         subState = 0;
     }

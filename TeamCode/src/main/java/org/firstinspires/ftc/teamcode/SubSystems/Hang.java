@@ -2,25 +2,28 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Hang extends SubsystemBase {
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    private DcMotorEx leftMotor;
+    private DcMotorEx rightMotor;
+    private DcMotorEx middleMotor;
 
     public Hang(HardwareMap hardwareMap) {
         super();
-        leftMotor = hardwareMap.get(DcMotor.class, "leftHang");
-        rightMotor = hardwareMap.get(DcMotor.class, "rightHang");
+        leftMotor = hardwareMap.get(DcMotorEx.class, "leftHang");
+        rightMotor = hardwareMap.get(DcMotorEx.class, "rightHang");
+        middleMotor = hardwareMap.get(DcMotorEx.class, "middleHang");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        middleMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        middleMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         stop();
     }

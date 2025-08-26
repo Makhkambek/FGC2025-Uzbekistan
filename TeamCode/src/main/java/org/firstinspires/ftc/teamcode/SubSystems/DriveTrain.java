@@ -1,29 +1,30 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveTrain {
-    private DcMotor leftFront;
-    private DcMotor leftBack;
-    private DcMotor rightFront;
-    private DcMotor rightBack;
+    private DcMotorEx leftFront;
+    private DcMotorEx leftBack;
+    private DcMotorEx rightFront;
+    private DcMotorEx rightBack;
     private boolean slowMode = false;
 
     public DriveTrain(HardwareMap hardwareMap) {
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        leftBack = hardwareMap.dcMotor.get("leftBack");
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        rightBack = hardwareMap.dcMotor.get("rightBack");
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
 
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        rightBack.setDirection(DcMotorEx.Direction.REVERSE);
 
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         stop();
     }
