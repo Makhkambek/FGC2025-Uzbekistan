@@ -1,1 +1,1 @@
-Хаю хай с вами Ивангай
+Some work to win — I work so no one else can.
