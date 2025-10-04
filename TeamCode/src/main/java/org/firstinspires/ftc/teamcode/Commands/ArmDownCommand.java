@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
 
 public class ArmDownCommand extends CommandBase {
     private final ArmIntake armIntake;
-    private final ElapsedTime timer = new ElapsedTime();
-    private static final double DELAY_SECONDS = 0.5;
+    private static final int POSITION_TOLERANCE = 5; // Допуск для достижения цели (±5 тиков)
 
     public ArmDownCommand(ArmIntake armIntake) {
         this.armIntake = armIntake;
@@ -17,13 +14,19 @@ public class ArmDownCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        armIntake.setArmState(ArmIntake.ArmState.DOWN);
-        timer.reset();
+        armIntake.setTarget(0); // 0 тиков для DOWN
+        armIntake.offGrippers(); // Выключаем grippers
     }
 
     @Override
     public boolean isFinished() {
-        return armIntake.getCurrentState() == ArmIntake.ArmState.IDLE && armIntake.getSubState() == 0
-                && timer.seconds() >= DELAY_SECONDS;
+        int currentPosition = armIntake.getPosition();
+        int target = 0;
+        return Math.abs(currentPosition - target) <= POSITION_TOLERANCE;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        // PID продолжает удерживать позицию
     }
 }

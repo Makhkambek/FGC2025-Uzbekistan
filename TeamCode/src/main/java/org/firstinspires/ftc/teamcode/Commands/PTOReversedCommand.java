@@ -1,27 +1,27 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.SubSystems.Hang;
+import org.firstinspires.ftc.teamcode.SubSystems.PTO;
 
-public class HangReverseCommand extends CommandBase {
-    private final Hang hang;
+public class PTOReversedCommand extends CommandBase {
+    private final PTO pto;
     private final double power;
 
-    public HangReverseCommand(Hang hang, double power) {
-        this.hang = hang;
+    public PTOReversedCommand(PTO pto, double power) {
+        this.pto = pto;
         this.power = power;
-        addRequirements(hang);
+
+        addRequirements(pto);
     }
 
     @Override
     public void initialize() {
-        hang.setPower(-power);
+        pto.setPower(-power);
     }
-
 
     @Override
     public void end(boolean interrupted) {
-        hang.stop();
+        pto.stop();
     }
 
     @Override

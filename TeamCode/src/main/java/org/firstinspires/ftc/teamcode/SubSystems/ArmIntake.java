@@ -2,111 +2,104 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class ArmIntake extends SubsystemBase {
-    private Servo servo1;
-    private Servo servo2;
     private CRServo servo3;
     private CRServo servo4;
+    private DcMotorEx ArmIntakeMotor;
 
-    public enum ArmState {
-        UP,
-        DOWN,
-        IDLE
-    }
+    public static final int TARGET_DEFAULT = 100; // Таргет по умолчанию — 100 тиков
 
-    private static final double ARM_UP_POSITION = 1.0;
-    private static final double ARM_DOWN_POSITION = 0.0;
+    private int target = TARGET_DEFAULT;
+
+    private double integralSum = 0.0;
+    private double lastError = 0.0;
+
+    private static final double INTEGRAL_LIMIT = 50.0;
+    public static final double kP = 0.01; // Proportional gain
+    public static final double kI = 0.0;  // Integral gain
+    public static final double kD = 0.0;  // Derivative gain
+    public static final double kF = 0.0;  // Feedforward gain
+
     private static final double GRIPPER_ON = 1.0;
     private static final double GRIPPER_OFF = 0.0;
-    private static final double IDLE_POSITION = 0.0;
-    private static final double UP_GRIPPER_DELAY_SECONDS = 2.0;
-    private static final double DOWN_ARM_DELAY_SECONDS = 0.5;
 
     private final ElapsedTime timer = new ElapsedTime();
-    private int subState = 0;
-    private ArmState currentState = ArmState.IDLE;
 
     public ArmIntake(HardwareMap hardwareMap) {
-        servo1 = hardwareMap.get(Servo.class, "servo1");
-        servo2 = hardwareMap.get(Servo.class, "servo2");
         servo3 = hardwareMap.get(CRServo.class, "servo3");
         servo4 = hardwareMap.get(CRServo.class, "servo4");
+        ArmIntakeMotor = hardwareMap.get(DcMotorEx.class, "ArmIntakeMotor");
 
-        stop();
+        ArmIntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        resetEncoders();
     }
 
-    public void setArmState(ArmState state) {
-        if (state != currentState) {
-            currentState = state;
-            subState = 0;
-        }
+    private void resetEncoders() {
+        ArmIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ArmIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        target = TARGET_DEFAULT;
+        integralSum = 0.0;
+        lastError = 0.0;
+        timer.reset();
+    }
 
-        switch (currentState) {
-            case UP:
-                switch (subState) {
-                    case 0:
-                        servo1.setPosition(ARM_UP_POSITION);
-                        servo2.setPosition(ARM_UP_POSITION);
-                        timer.reset();
-                        subState++;
-                        break;
-                    case 1:
-                        if (timer.seconds() > UP_GRIPPER_DELAY_SECONDS) {
-                            servo3.setPower(GRIPPER_ON);
-                            servo4.setPower(GRIPPER_ON);
-                            currentState = ArmState.IDLE;
-                            subState = 0;
-                        }
-                        break;
-                }
-                break;
-            case DOWN:
-                switch (subState) {
-                    case 0:
-                        servo3.setPower(GRIPPER_OFF);
-                        servo4.setPower(GRIPPER_OFF);
-                        timer.reset();
-                        subState++;
-                        break;
-                    case 1:
-                        if (timer.seconds() > DOWN_ARM_DELAY_SECONDS) {
-                            servo1.setPosition(ARM_DOWN_POSITION);
-                            servo2.setPosition(ARM_DOWN_POSITION);
-                            currentState = ArmState.IDLE;
-                            subState = 0;
-                        }
-                        break;
-                }
-                break;
-            case IDLE:
-                stop();
-                break;
-        }
+    public void setTarget(int targetPosition) {
+        target = targetPosition;
+        integralSum = 0.0; // Сброс интеграла при смене цели
+    }
+
+    public void runGrippers() {
+        servo3.setPower(GRIPPER_ON);
+        servo4.setPower(GRIPPER_ON);
+    }
+
+    public void offGrippers() {
+        servo3.setPower(GRIPPER_OFF);
+        servo4.setPower(GRIPPER_OFF);
     }
 
     public void stop() {
-        servo1.setPosition(IDLE_POSITION);
-        servo2.setPosition(IDLE_POSITION);
-        servo3.setPower(GRIPPER_OFF);
-        servo4.setPower(GRIPPER_OFF);
-        currentState = ArmState.IDLE;
-        subState = 0;
-    }
-
-    public ArmState getCurrentState() {
-        return currentState;
-    }
-
-    public int getSubState() {
-        return subState;
+        offGrippers(); // Выключаем grippers
+        ArmIntakeMotor.setPower(0.0);
+        resetEncoders();
     }
 
     @Override
     public void periodic() {
-        setArmState(currentState);
+        double deltaTime = timer.seconds();
+        if (deltaTime < 0.001) deltaTime = 0.001;
+
+        // PID control for ArmIntakeMotor
+        double position = ArmIntakeMotor.getCurrentPosition();
+        double error = target - position;
+        integralSum = clampIntegral(integralSum + error * deltaTime);
+        double derivative = (error - lastError) / deltaTime;
+        double output = (kP * error) + (kI * integralSum) + (kD * derivative) + kF;
+        ArmIntakeMotor.setPower(clampPower(output));
+
+        lastError = error;
+        timer.reset();
+    }
+
+    private double clampPower(double power) {
+        return Math.max(-1.0, Math.min(1.0, power));
+    }
+
+    private double clampIntegral(double integral) {
+        return Math.max(-INTEGRAL_LIMIT, Math.min(INTEGRAL_LIMIT, integral));
+    }
+
+    public int getPosition() {
+        return ArmIntakeMotor.getCurrentPosition();
+    }
+
+    public int getTarget() {
+        return target;
     }
 }

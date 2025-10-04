@@ -5,33 +5,32 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.teamcode.Controllers.DrumIntakeController;
-import org.firstinspires.ftc.teamcode.Controllers.HangController;
+import org.firstinspires.ftc.teamcode.Controllers.PTOController;
 import org.firstinspires.ftc.teamcode.Controllers.ArmIntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.ResetController;
+import org.firstinspires.ftc.teamcode.SubSystems.BoxArm;
+import org.firstinspires.ftc.teamcode.SubSystems.Clutch;
+import org.firstinspires.ftc.teamcode.SubSystems.PTO;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
-import org.firstinspires.ftc.teamcode.SubSystems.DrumIntake;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
-import org.firstinspires.ftc.teamcode.SubSystems.Hang;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
-        DrumIntake drumIntake = new DrumIntake(hardwareMap);
-        DriveTrain driveTrain = new DriveTrain(hardwareMap);
-        Hang hang = new Hang(hardwareMap);
+        PTO pto = new PTO(hardwareMap);
         ArmIntake armIntake = new ArmIntake(hardwareMap);
+        BoxArm boxArm = new BoxArm(hardwareMap);
+        Clutch clutch = new Clutch(hardwareMap);
+        DriveTrain driveTrain = new DriveTrain(hardwareMap);
 
         GamepadEx gamepad1Ex = new GamepadEx(gamepad1);
         GamepadEx gamepad2Ex = new GamepadEx(gamepad2);
 
-        DrumIntakeController drumController = new DrumIntakeController(drumIntake, gamepad2Ex);
-        HangController hangController = new HangController(hang, gamepad2Ex);
-        ArmIntakeController ArmIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
-        ResetController resetController = new ResetController(drumIntake, hang, armIntake, gamepad2Ex);
+        PTOController ptoController = new PTOController(pto, gamepad2Ex);
+        ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
+        ResetController resetController = new ResetController(pto, armIntake, boxArm, clutch,  gamepad2Ex);
 
         boolean wasRightTriggerPressed = false;
 
@@ -40,9 +39,8 @@ public class TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             CommandScheduler.getInstance().run();
 
-            drumController.update();
-            hangController.update();
-            ArmIntakeController.update();
+            ptoController.update();
+            armIntakeController.update();
             resetController.update();
 
             boolean isRightTriggerPressed = gamepad1Ex.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2;
