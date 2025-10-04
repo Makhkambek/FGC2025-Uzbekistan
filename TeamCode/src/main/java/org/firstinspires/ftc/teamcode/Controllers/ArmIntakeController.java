@@ -24,9 +24,8 @@ public class ArmIntakeController {
         boolean isLeftBumperPressed = gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER);
         boolean isXPressed = gamepad.getButton(GamepadKeys.Button.X);
 
-        // Обработка левого бампера (UP/DOWN)
         if (isLeftBumperPressed && !wasLeftBumperPressed) {
-            // CommandScheduler.getInstance().cancelAll(); // Закомментировано, как в вашем коде
+            // CommandScheduler.getInstance().cancelAll();
 
             leftBumperToggle = (leftBumperToggle + 1) % 2;
 
@@ -37,9 +36,8 @@ public class ArmIntakeController {
             }
         }
 
-        // Обработка кнопки X (TAKE)
         if (isXPressed && !wasXPressed) {
-            CommandScheduler.getInstance().cancelAll(); // Отменяем предыдущие команды для TAKE
+            CommandScheduler.getInstance().cancelAll();
             CommandScheduler.getInstance().schedule(new ArmTakeCommand(armIntake));
         }
 

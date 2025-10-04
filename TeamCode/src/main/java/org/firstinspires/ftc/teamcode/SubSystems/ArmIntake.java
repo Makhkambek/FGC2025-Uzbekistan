@@ -12,7 +12,7 @@ public class ArmIntake extends SubsystemBase {
     private CRServo servo4;
     private DcMotorEx ArmIntakeMotor;
 
-    public static final int TARGET_DEFAULT = 100; // Таргет по умолчанию — 100 тиков
+    public static final int TARGET_DEFAULT = 100;
 
     private int target = TARGET_DEFAULT;
 
@@ -20,10 +20,10 @@ public class ArmIntake extends SubsystemBase {
     private double lastError = 0.0;
 
     private static final double INTEGRAL_LIMIT = 50.0;
-    public static final double kP = 0.01; // Proportional gain
-    public static final double kI = 0.0;  // Integral gain
-    public static final double kD = 0.0;  // Derivative gain
-    public static final double kF = 0.0;  // Feedforward gain
+    public static final double kP = 0.02;
+    public static final double kI = 0.006;
+    public static final double kD = 0.001;
+    public static final double kF = 0.1;
 
     private static final double GRIPPER_ON = 1.0;
     private static final double GRIPPER_OFF = 0.0;
@@ -51,7 +51,7 @@ public class ArmIntake extends SubsystemBase {
 
     public void setTarget(int targetPosition) {
         target = targetPosition;
-        integralSum = 0.0; // Сброс интеграла при смене цели
+        integralSum = 0.0;
     }
 
     public void runGrippers() {
@@ -65,7 +65,7 @@ public class ArmIntake extends SubsystemBase {
     }
 
     public void stop() {
-        offGrippers(); // Выключаем grippers
+        offGrippers();
         ArmIntakeMotor.setPower(0.0);
         resetEncoders();
     }
@@ -75,7 +75,6 @@ public class ArmIntake extends SubsystemBase {
         double deltaTime = timer.seconds();
         if (deltaTime < 0.001) deltaTime = 0.001;
 
-        // PID control for ArmIntakeMotor
         double position = ArmIntakeMotor.getCurrentPosition();
         double error = target - position;
         integralSum = clampIntegral(integralSum + error * deltaTime);

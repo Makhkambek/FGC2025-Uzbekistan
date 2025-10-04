@@ -15,7 +15,7 @@ public class BoxArm extends SubsystemBase {
         boxServo_left = hardwareMap.get(Servo.class, "boxServo_left");
         boxServo_right = hardwareMap.get(Servo.class, "boxServo_right");
 
-        closeBox(); // Закрываем коробку при инициализации
+        closeBox();
     }
 
     public void openBox() {
@@ -29,6 +29,6 @@ public class BoxArm extends SubsystemBase {
     }
 
     public void stop() {
-        closeBox(); // Закрываем коробку
+        closeBox();
     }
 }

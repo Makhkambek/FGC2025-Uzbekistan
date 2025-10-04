@@ -22,7 +22,7 @@ public class PTOController {
         boolean isRightBumperPressed = gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER);
 
         if (isRightBumperPressed && !wasRightBumperPressed) {
-            // CommandScheduler.getInstance().cancelAll(); // Закомментировано, как в вашем коде
+            // CommandScheduler.getInstance().cancelAll();
 
             rightBumperToggle = (rightBumperToggle + 1) % 2;
 

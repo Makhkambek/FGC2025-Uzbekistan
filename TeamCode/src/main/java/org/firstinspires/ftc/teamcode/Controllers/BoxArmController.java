@@ -20,14 +20,14 @@ public class BoxArmController {
         boolean isRightTriggerPressed = gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2;
 
         if (isRightTriggerPressed && !wasRightTriggerPressed) {
-            CommandScheduler.getInstance().cancelAll(); // Опционально, если нужно отменять другие команды
+            CommandScheduler.getInstance().cancelAll();
 
             rightTriggerToggle = (rightTriggerToggle + 1) % 2;
 
             if (rightTriggerToggle == 0) {
-                boxArm.openBox(); // Прямой вызов open()
+                boxArm.openBox();
             } else {
-                boxArm.closeBox(); // Прямой вызов close()
+                boxArm.closeBox();
             }
         }
 

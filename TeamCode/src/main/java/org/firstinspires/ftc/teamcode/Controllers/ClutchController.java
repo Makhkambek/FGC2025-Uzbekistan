@@ -21,13 +21,13 @@ public class ClutchController {
         boolean isXPressed = gamepad.getButton(GamepadKeys.Button.X);
 
         if (isYPressed && !wasYPressed) {
-            CommandScheduler.getInstance().cancelAll(); // Опционально
-            clutch.open(); // Прямой вызов open()
+            CommandScheduler.getInstance().cancelAll();
+            clutch.open();
         }
 
         if (isXPressed && !wasXPressed) {
-            CommandScheduler.getInstance().cancelAll(); // Опционально
-            clutch.close(); // Прямой вызов close()
+            CommandScheduler.getInstance().cancelAll();
+            clutch.close();
         }
 
         wasYPressed = isYPressed;

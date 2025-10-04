@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
 
 public class ArmUpCommand extends CommandBase {
     private final ArmIntake armIntake;
-    private static final int POSITION_TOLERANCE = 5; // Допуск для достижения цели (±5 тиков)
+    private static final int POSITION_TOLERANCE = 5;
 
     public ArmUpCommand(ArmIntake armIntake) {
         this.armIntake = armIntake;
@@ -14,8 +14,8 @@ public class ArmUpCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        armIntake.setTarget(ArmIntake.TARGET_DEFAULT); // 100 тиков для UP
-        armIntake.runGrippers(); // Включаем grippers
+        armIntake.setTarget(ArmIntake.TARGET_DEFAULT);
+        armIntake.runGrippers();
     }
 
     @Override
@@ -27,6 +27,5 @@ public class ArmUpCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        // PID продолжает удерживать позицию
     }
 }
