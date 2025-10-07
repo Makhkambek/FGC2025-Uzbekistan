@@ -26,20 +26,20 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() {
         PTO pto = new PTO(hardwareMap);
         ArmIntake armIntake = new ArmIntake(hardwareMap);
-        BoxArm boxArm = new BoxArm(hardwareMap);
         Clutch clutch = new Clutch(hardwareMap);
+        BoxArm boxArm = new BoxArm(hardwareMap, clutch);
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
-        Vision vision = new Vision(hardwareMap);
+//        Vision vision = new Vision(hardwareMap);
 
         GamepadEx gamepad1Ex = new GamepadEx(gamepad1);
         GamepadEx gamepad2Ex = new GamepadEx(gamepad2);
 
         PTOController ptoController = new PTOController(pto, gamepad2Ex);
-        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
-        ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
+//        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
+        ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad1Ex);
         BoxArmController boxArmController = new BoxArmController(boxArm, gamepad2Ex);
         ClutchController clutchController = new ClutchController(clutch, gamepad2Ex);
-        ResetController resetController = new ResetController(pto, armIntake, boxArm, clutch,  gamepad2Ex);
+        ResetController resetController = new ResetController(pto, boxArm, armIntake, clutch, gamepad2Ex);
 
         boolean wasRightTriggerPressed = false;
 
@@ -55,7 +55,7 @@ public class TeleOp extends LinearOpMode {
 //            visionController.update();
             resetController.update();
 
-            boolean isRightTriggerPressed = gamepad1Ex.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2;
+            boolean isRightTriggerPressed = gamepad1Ex.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.4;
             if (isRightTriggerPressed && !wasRightTriggerPressed) {
                 driveTrain.setSlowMode(!driveTrain.isSlowMode());
             }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class PTO extends SubsystemBase {
@@ -17,7 +18,7 @@ public class PTO extends SubsystemBase {
 
         leftMotor.setDirection(DcMotorEx.Direction.FORWARD);
         rightMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        middleMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        middleMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         leftMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);

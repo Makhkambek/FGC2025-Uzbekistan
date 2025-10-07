@@ -4,12 +4,11 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.SubSystems.Clutch;
-
 public class ClutchController {
     private final Clutch clutch;
     private final GamepadEx gamepad;
-    private boolean wasYPressed = false;
-    private boolean wasXPressed = false;
+    private int leftBumperToggle = 0;
+    private boolean wasLeftBumperPressed = false;
 
     public ClutchController(Clutch clutch, GamepadEx gamepad) {
         this.clutch = clutch;
@@ -17,20 +16,20 @@ public class ClutchController {
     }
 
     public void update() {
-        boolean isYPressed = gamepad.getButton(GamepadKeys.Button.Y);
-        boolean isXPressed = gamepad.getButton(GamepadKeys.Button.X);
+        boolean isLeftBumperPressed = gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER);
 
-        if (isYPressed && !wasYPressed) {
+        if (isLeftBumperPressed && !wasLeftBumperPressed) {
             CommandScheduler.getInstance().cancelAll();
-            clutch.open();
+
+            leftBumperToggle = (leftBumperToggle + 1) % 2;
+
+            if (leftBumperToggle == 0) {
+                clutch.open();
+            } else {
+                clutch.close();
+            }
         }
 
-        if (isXPressed && !wasXPressed) {
-            CommandScheduler.getInstance().cancelAll();
-            clutch.close();
-        }
-
-        wasYPressed = isYPressed;
-        wasXPressed = isXPressed;
+        wasLeftBumperPressed = isLeftBumperPressed;
     }
 }

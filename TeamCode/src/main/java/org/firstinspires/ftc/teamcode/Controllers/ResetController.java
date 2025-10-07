@@ -17,7 +17,7 @@ public class ResetController {
     private final GamepadEx gamepad;
     private boolean wasOptionsPressed = false;
 
-    public ResetController(PTO pto, ArmIntake armIntake, BoxArm boxArm, Clutch clutch, GamepadEx gamepad) {
+    public ResetController(PTO pto, BoxArm boxArm, ArmIntake armIntake, Clutch clutch, GamepadEx gamepad) {
         this.pto = pto;
         this.armIntake = armIntake;
         this.boxArm = boxArm;

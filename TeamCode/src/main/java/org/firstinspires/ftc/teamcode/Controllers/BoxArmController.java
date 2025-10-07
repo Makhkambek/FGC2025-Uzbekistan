@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.BoxArm;
 public class BoxArmController {
     private final BoxArm boxArm;
     private final GamepadEx gamepad;
-    private int rightTriggerToggle = 0;
-    private boolean wasRightTriggerPressed = false;
+    private int rightBumperToggle = 0;
+    private boolean wasRightBumperPressed = false;
 
     public BoxArmController(BoxArm boxArm, GamepadEx gamepad) {
         this.boxArm = boxArm;
@@ -17,20 +17,20 @@ public class BoxArmController {
     }
 
     public void update() {
-        boolean isRightTriggerPressed = gamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.2;
+        boolean isRightBumperPressed = gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER);
 
-        if (isRightTriggerPressed && !wasRightTriggerPressed) {
+        if (isRightBumperPressed && !wasRightBumperPressed) {
             CommandScheduler.getInstance().cancelAll();
 
-            rightTriggerToggle = (rightTriggerToggle + 1) % 2;
+            rightBumperToggle = (rightBumperToggle + 1) % 2;
 
-            if (rightTriggerToggle == 0) {
+            if (rightBumperToggle == 0) {
                 boxArm.openBox();
             } else {
                 boxArm.closeBox();
             }
         }
 
-        wasRightTriggerPressed = isRightTriggerPressed;
+        wasRightBumperPressed = isRightBumperPressed;
     }
 }

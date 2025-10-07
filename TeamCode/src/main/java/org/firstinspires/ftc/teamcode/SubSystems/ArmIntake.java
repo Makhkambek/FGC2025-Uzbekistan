@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,7 +13,8 @@ public class ArmIntake extends SubsystemBase {
     private CRServo servo4;
     private DcMotorEx ArmIntakeMotor;
 
-    public static final int TARGET_DEFAULT = 100;
+    public static final int TARGET_ZERO = 0;
+    public static final int TARGET_DEFAULT = 150;
 
     private int target = TARGET_DEFAULT;
 
@@ -27,6 +29,7 @@ public class ArmIntake extends SubsystemBase {
 
     private static final double GRIPPER_ON = 1.0;
     private static final double GRIPPER_OFF = 0.0;
+    private static final double GRIPPER_RETRACT = -1.0;
 
     private final ElapsedTime timer = new ElapsedTime();
 
@@ -35,7 +38,8 @@ public class ArmIntake extends SubsystemBase {
         servo4 = hardwareMap.get(CRServo.class, "servo4");
         ArmIntakeMotor = hardwareMap.get(DcMotorEx.class, "ArmIntakeMotor");
 
-        ArmIntakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ArmIntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        ArmIntakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         resetEncoders();
     }
@@ -43,7 +47,7 @@ public class ArmIntake extends SubsystemBase {
     private void resetEncoders() {
         ArmIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        target = TARGET_DEFAULT;
+        target = TARGET_ZERO;
         integralSum = 0.0;
         lastError = 0.0;
         timer.reset();
@@ -62,6 +66,11 @@ public class ArmIntake extends SubsystemBase {
     public void offGrippers() {
         servo3.setPower(GRIPPER_OFF);
         servo4.setPower(GRIPPER_OFF);
+    }
+
+    public void retract() {
+        servo3.setPower(GRIPPER_RETRACT);
+        servo4.setPower(GRIPPER_RETRACT);
     }
 
     public void stop() {
