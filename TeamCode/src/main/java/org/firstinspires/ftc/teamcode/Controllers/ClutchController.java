@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.SubSystems.Clutch;
+
 public class ClutchController {
     private final Clutch clutch;
     private final GamepadEx gamepad;
@@ -31,5 +32,11 @@ public class ClutchController {
         }
 
         wasLeftBumperPressed = isLeftBumperPressed;
+    }
+
+    // Added method to reset the toggle counter
+    public void reset() {
+        leftBumperToggle = 0;
+        wasLeftBumperPressed = false;
     }
 }

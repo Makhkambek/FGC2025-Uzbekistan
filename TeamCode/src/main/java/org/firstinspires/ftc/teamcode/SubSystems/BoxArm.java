@@ -30,11 +30,11 @@ public class BoxArm extends SubsystemBase {
     }
 
     public void startOpenBox() {
-        if (!isOpening && !isClosing) {
-            openSubState = 0;
-            timer.reset();
-            isOpening = true;
-        }
+        isClosing = false;
+        closeSubState = 0;
+        openSubState = 0;
+        timer.reset();
+        isOpening = true;
     }
 
     private void executeOpenBox() {
@@ -62,11 +62,11 @@ public class BoxArm extends SubsystemBase {
     }
 
     public void startCloseBox() {
-        if (!isOpening && !isClosing) {
-            closeSubState = 0;
-            timer.reset();
-            isClosing = true;
-        }
+        isOpening = false;
+        openSubState = 0;
+        closeSubState = 0;
+        timer.reset();
+        isClosing = true;
     }
 
     private void executeCloseBox() {

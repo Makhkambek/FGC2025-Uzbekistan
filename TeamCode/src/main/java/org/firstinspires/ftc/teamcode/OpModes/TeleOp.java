@@ -27,7 +27,7 @@ public class TeleOp extends LinearOpMode {
         PTO pto = new PTO(hardwareMap);
         ArmIntake armIntake = new ArmIntake(hardwareMap);
         Clutch clutch = new Clutch(hardwareMap);
-        BoxArm boxArm = new BoxArm(hardwareMap, clutch, telemetry);
+        BoxArm boxArm = new BoxArm(hardwareMap, clutch);
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
 //        Vision vision = new Vision(hardwareMap);
 
@@ -36,10 +36,10 @@ public class TeleOp extends LinearOpMode {
 
         PTOController ptoController = new PTOController(pto, gamepad2Ex);
 //        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
-        ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad1Ex);
+        ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
         BoxArmController boxArmController = new BoxArmController(boxArm, gamepad2Ex);
         ClutchController clutchController = new ClutchController(clutch, gamepad2Ex);
-        ResetController resetController = new ResetController(pto, armIntake, boxArm, clutch, gamepad2Ex);
+        ResetController resetController = new ResetController(pto, armIntake, boxArm, clutch, clutchController, gamepad2Ex);
 
         waitForStart();
 

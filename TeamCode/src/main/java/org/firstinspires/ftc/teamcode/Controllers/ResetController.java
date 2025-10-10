@@ -14,14 +14,16 @@ public class ResetController {
     private final ArmIntake armIntake;
     private final BoxArm boxArm;
     private final Clutch clutch;
+    private final ClutchController clutchController; // Added to reset toggle
     private final GamepadEx gamepad;
     private boolean wasOptionsPressed = false;
 
-    public ResetController(PTO pto, ArmIntake armIntake, BoxArm boxArm, Clutch clutch, GamepadEx gamepad) {
+    public ResetController(PTO pto, ArmIntake armIntake, BoxArm boxArm, Clutch clutch, ClutchController clutchController, GamepadEx gamepad) {
         this.pto = pto;
         this.armIntake = armIntake;
         this.boxArm = boxArm;
         this.clutch = clutch;
+        this.clutchController = clutchController;
         this.gamepad = gamepad;
     }
 
@@ -34,6 +36,7 @@ public class ResetController {
             armIntake.stop();
             boxArm.stop();
             clutch.stop();
+            clutchController.reset(); // Reset the clutch controller's toggle
         }
 
         wasOptionsPressed = isOptionsPressed;

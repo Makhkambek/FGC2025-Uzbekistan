@@ -17,7 +17,7 @@ public class ArmIntake extends SubsystemBase {
     private static final double kP = 0.002;
     private static final double kI = 0.00;
     private static final double kD = 0.00;
-    private static final double kF = 0.015;
+    private static final double kF = 0.02;
     private static final double INTEGRAL_LIMIT = 50.0;
 
     private static final double GRIPPER_ON = 1.0;
@@ -49,13 +49,7 @@ public class ArmIntake extends SubsystemBase {
         timer.reset();
     }
 
-    public void stepTargetMinus150() {
-        targetPosition -= 150;
-    }
 
-    public void resetTargetToZero() {
-        targetPosition = ZERO;
-    }
 
     public void setTarget(int targetPosition) {
         this.targetPosition = targetPosition;

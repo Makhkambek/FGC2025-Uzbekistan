@@ -9,9 +9,11 @@ import org.firstinspires.ftc.teamcode.Commands.ArmIntakeCommand;
 public class ArmIntakeController {
     private final ArmIntake armIntake;
     private final GamepadEx gamepad;
-    private int leftBumperToggle = 0;
-    private boolean wasLeftBumperPressed = false;
-    private boolean wasRightBumperPressed = false;
+    private static final int MAX_POSITION = 170;
+    private static final int MIN_POSITION = 0;
+    private static final int LEFT_STICK_TARGET = 130;
+    private static final double JOYSTICK_SCALE_FACTOR = 5.0;
+    private static final double JOYSTICK_DEADZONE = 0.1;
 
     public ArmIntakeController(ArmIntake armIntake, GamepadEx gamepad) {
         this.armIntake = armIntake;
@@ -19,28 +21,25 @@ public class ArmIntakeController {
     }
 
     public void update() {
-        boolean isLeftBumperPressed = gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER);
-        boolean isRightBumperPressed = gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER);
         double leftTrigger = gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
+        double rightStickY = -gamepad.getRightY();
+        double leftStickY = -gamepad.getLeftY();
 
-        if (isLeftBumperPressed && !wasLeftBumperPressed) {
-            CommandScheduler.getInstance().cancelAll();
-            leftBumperToggle = (leftBumperToggle + 1) % 2;
-            if (leftBumperToggle == 0) {
-                CommandScheduler.getInstance().schedule(
-                        new ArmIntakeCommand(armIntake, ArmIntake.ZERO, false, false)
-                );
-            } else {
-                CommandScheduler.getInstance().schedule(
-                        new ArmIntakeCommand(armIntake, ArmIntake.TARGET, true, false)
-                );
-            }
-        }
-
-        if (isRightBumperPressed && !wasRightBumperPressed) {
+        if (Math.abs(leftStickY) > JOYSTICK_DEADZONE) {
             CommandScheduler.getInstance().cancelAll();
             CommandScheduler.getInstance().schedule(
-                    new ArmIntakeCommand(armIntake, 120, true, false)
+                    new ArmIntakeCommand(armIntake, LEFT_STICK_TARGET, false, false)
+            );
+        }
+
+        if (Math.abs(rightStickY) > JOYSTICK_DEADZONE) {
+            CommandScheduler.getInstance().cancelAll();
+            int currentTarget = armIntake.getTarget();
+            int delta = (int) (rightStickY * JOYSTICK_SCALE_FACTOR);
+            int newTarget = currentTarget + delta;
+            newTarget = Math.max(MIN_POSITION, Math.min(MAX_POSITION, newTarget));
+            CommandScheduler.getInstance().schedule(
+                    new ArmIntakeCommand(armIntake, newTarget, false, false)
             );
         }
 
@@ -50,7 +49,6 @@ public class ArmIntakeController {
             armIntake.offGrippers();
         }
 
-        wasLeftBumperPressed = isLeftBumperPressed;
-        wasRightBumperPressed = isRightBumperPressed;
+        armIntake.periodic();
     }
 }
