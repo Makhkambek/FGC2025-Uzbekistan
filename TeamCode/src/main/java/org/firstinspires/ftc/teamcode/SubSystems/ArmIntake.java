@@ -29,6 +29,9 @@ public class ArmIntake extends SubsystemBase {
     private int targetPosition;
     private int doorStartPosition;
     private final ElapsedTime timer = new ElapsedTime();
+    private boolean isResetting = false;
+    private int resetState = 0;
+    private final ElapsedTime resetTimer = new ElapsedTime();
 
     public ArmIntake(HardwareMap hardwareMap) {
         servo3 = hardwareMap.get(CRServo.class, "servo3");
@@ -75,34 +78,57 @@ public class ArmIntake extends SubsystemBase {
 
     public void stop() {
         offGrippers();
-        ArmIntakeMotor.setPower(0.0);
-        ArmIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ArmIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        targetPosition = ZERO;
-        integralSum = 0.0;
-        lastError = 0.0;
-        timer.reset();
+        isResetting = true;
+        resetState = 0;
+        resetTimer.reset();
+    }
+
+    private void executeReset() {
+        switch (resetState) {
+            case 0:
+                ArmIntakeMotor.setPower(0.0);
+                ArmIntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+                resetState++;
+                break;
+            case 1:
+                if (resetTimer.seconds() >= 1.0) {
+                    ArmIntakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    ArmIntakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    ArmIntakeMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+                    targetPosition = ZERO;
+                    integralSum = 0.0;
+                    lastError = 0.0;
+                    timer.reset();
+                    isResetting = false;
+                    resetState = 0;
+                }
+                break;
+        }
     }
 
     @Override
     public void periodic() {
-        double dt = timer.seconds();
-        if (dt < 1e-3) dt = 1e-3;
+        if (isResetting) {
+            executeReset();
+        } else {
+            double dt = timer.seconds();
+            if (dt < 1e-3) dt = 1e-3;
 
-        double current = ArmIntakeMotor.getCurrentPosition();
-        double error = targetPosition - current;
+            double current = ArmIntakeMotor.getCurrentPosition();
+            double error = targetPosition - current;
 
-        integralSum += error * dt;
-        integralSum = Math.max(-INTEGRAL_LIMIT, Math.min(INTEGRAL_LIMIT, integralSum));
+            integralSum += error * dt;
+            integralSum = Math.max(-INTEGRAL_LIMIT, Math.min(INTEGRAL_LIMIT, integralSum));
 
-        double derivative = (error - lastError) / dt;
-        double output = (kP * error) + (kI * integralSum) + (kD * derivative) + kF;
+            double derivative = (error - lastError) / dt;
+            double output = (kP * error) + (kI * integralSum) + (kD * derivative) + kF;
 
-        output = Math.max(-1.0, Math.min(1.0, output));
-        ArmIntakeMotor.setPower(output);
+            output = Math.max(-1.0, Math.min(1.0, output));
+            ArmIntakeMotor.setPower(output);
 
-        lastError = error;
-        timer.reset();
+            lastError = error;
+            timer.reset();
+        }
     }
 
     public int getPosition() {

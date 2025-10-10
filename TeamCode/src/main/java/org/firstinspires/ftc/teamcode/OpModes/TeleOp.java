@@ -27,7 +27,7 @@ public class TeleOp extends LinearOpMode {
         PTO pto = new PTO(hardwareMap);
         ArmIntake armIntake = new ArmIntake(hardwareMap);
         Clutch clutch = new Clutch(hardwareMap);
-        BoxArm boxArm = new BoxArm(hardwareMap, clutch);
+        BoxArm boxArm = new BoxArm(hardwareMap, clutch, telemetry);
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
 //        Vision vision = new Vision(hardwareMap);
 
