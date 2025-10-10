@@ -39,4 +39,9 @@ public class Clutch extends SubsystemBase {
     public void stop() {
         close();
     }
+
+    public boolean isOpen() {
+        return clutchServo_left.getPosition() == SERVO_OPEN &&
+                clutchServo_right.getPosition() == SERVO_OPEN;
+    }
 }
