@@ -24,9 +24,9 @@ public class ClutchController {
             leftBumperToggle = (leftBumperToggle + 1) % 2;
 
             if (leftBumperToggle == 0) {
-                clutch.open();
-            } else {
                 clutch.close();
+            } else {
+                clutch.open();
             }
         }
 

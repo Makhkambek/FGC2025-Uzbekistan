@@ -48,7 +48,7 @@ public class BoxArm extends SubsystemBase {
                 break;
 
             case 1:
-                if (timer.seconds() > 0.5) {
+                if (timer.seconds() > 1.0) {
                     clutch.close();
                     isOpening = false;
                     openSubState = 0;

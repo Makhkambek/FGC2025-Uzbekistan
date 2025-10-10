@@ -39,9 +39,7 @@ public class TeleOp extends LinearOpMode {
         ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad1Ex);
         BoxArmController boxArmController = new BoxArmController(boxArm, gamepad2Ex);
         ClutchController clutchController = new ClutchController(clutch, gamepad2Ex);
-        ResetController resetController = new ResetController(pto, boxArm, armIntake, clutch, gamepad2Ex);
-
-        boolean wasRightTriggerPressed = false;
+        ResetController resetController = new ResetController(pto, armIntake, boxArm, clutch, gamepad2Ex);
 
         waitForStart();
 
@@ -56,12 +54,9 @@ public class TeleOp extends LinearOpMode {
             resetController.update();
 
             boolean isRightTriggerPressed = gamepad1Ex.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.4;
-            if (isRightTriggerPressed && !wasRightTriggerPressed) {
-                driveTrain.setSlowMode(!driveTrain.isSlowMode());
-            }
-            wasRightTriggerPressed = isRightTriggerPressed;
+            driveTrain.setSlowMode(isRightTriggerPressed);
 
-            double drive = -gamepad1Ex.getLeftY();
+            double drive = gamepad1Ex.getLeftY();
             double turn = gamepad1Ex.getRightX();
             driveTrain.tankDrive(drive, turn);
 

@@ -25,9 +25,9 @@ public class BoxArmController {
             rightBumperToggle = (rightBumperToggle + 1) % 2;
 
             if (rightBumperToggle == 0) {
-                boxArm.openBox();
-            } else {
                 boxArm.closeBox();
+            } else {
+                boxArm.openBox();
             }
         }
 

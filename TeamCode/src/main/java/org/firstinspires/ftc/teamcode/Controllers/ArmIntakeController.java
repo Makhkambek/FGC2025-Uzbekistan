@@ -4,9 +4,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
-import org.firstinspires.ftc.teamcode.Commands.ArmUpCommand;
-import org.firstinspires.ftc.teamcode.Commands.ArmDownCommand;
-import org.firstinspires.ftc.teamcode.Commands.ArmTakeCommand;
+import org.firstinspires.ftc.teamcode.Commands.ArmIntakeCommand;
 
 public class ArmIntakeController {
     private final ArmIntake armIntake;
@@ -23,23 +21,29 @@ public class ArmIntakeController {
     public void update() {
         boolean isLeftBumperPressed = gamepad.getButton(GamepadKeys.Button.LEFT_BUMPER);
         boolean isRightBumperPressed = gamepad.getButton(GamepadKeys.Button.RIGHT_BUMPER);
+        double leftTrigger = gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
 
         if (isLeftBumperPressed && !wasLeftBumperPressed) {
+            CommandScheduler.getInstance().cancelAll();
             leftBumperToggle = (leftBumperToggle + 1) % 2;
-
             if (leftBumperToggle == 0) {
-                CommandScheduler.getInstance().schedule(new ArmUpCommand(armIntake));
+                CommandScheduler.getInstance().schedule(
+                        new ArmIntakeCommand(armIntake, ArmIntake.ZERO, false, false)
+                );
             } else {
-                CommandScheduler.getInstance().schedule(new ArmDownCommand(armIntake));
+                CommandScheduler.getInstance().schedule(
+                        new ArmIntakeCommand(armIntake, ArmIntake.TARGET, true, false)
+                );
             }
         }
 
         if (isRightBumperPressed && !wasRightBumperPressed) {
             CommandScheduler.getInstance().cancelAll();
-            CommandScheduler.getInstance().schedule(new ArmTakeCommand(armIntake));
+            CommandScheduler.getInstance().schedule(
+                    new ArmIntakeCommand(armIntake, 120, true, false)
+            );
         }
 
-        double leftTrigger = gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
         if (leftTrigger > 0.2) {
             armIntake.retract();
         } else {
