@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.Commands.ArmIntakeCommand;
 public class ArmIntakeController {
     private final ArmIntake armIntake;
     private final GamepadEx gamepad;
-    private static final int MAX_POSITION = 170;
+    private static final int MAX_POSITION = 165;
     private static final int MIN_POSITION = 0;
-    private static final int LEFT_STICK_TARGET = 130;
+    private static final int LEFT_STICK_TARGET = 80;
     private static final double JOYSTICK_SCALE_FACTOR = 5.0;
     private static final double JOYSTICK_DEADZONE = 0.1;
 
@@ -21,7 +21,6 @@ public class ArmIntakeController {
     }
 
     public void update() {
-        double leftTrigger = gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
         double rightStickY = -gamepad.getRightY();
         double leftStickY = -gamepad.getLeftY();
 
@@ -43,8 +42,20 @@ public class ArmIntakeController {
             );
         }
 
-        if (leftTrigger > 0.2) {
+        boolean isDpadPressed = gamepad.getButton(GamepadKeys.Button.DPAD_UP) ||
+                gamepad.getButton(GamepadKeys.Button.DPAD_DOWN) ||
+                gamepad.getButton(GamepadKeys.Button.DPAD_LEFT) ||
+                gamepad.getButton(GamepadKeys.Button.DPAD_RIGHT);
+
+        boolean isRightSideButtonPressed = gamepad.getButton(GamepadKeys.Button.A) ||
+                gamepad.getButton(GamepadKeys.Button.B) ||
+                gamepad.getButton(GamepadKeys.Button.X) ||
+                gamepad.getButton(GamepadKeys.Button.Y);
+
+        if (isDpadPressed) {
             armIntake.retract();
+        } else if (isRightSideButtonPressed) {
+            armIntake.runGrippers();
         } else {
             armIntake.offGrippers();
         }

@@ -2,14 +2,14 @@ package org.firstinspires.ftc.teamcode.Controllers;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import org.firstinspires.ftc.teamcode.SubSystems.PTO;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 
-public class PTOController {
-    private final PTO pto;
+public class IntakeController {
+    private final Intake intake;
     private final GamepadEx gamepad;
 
-    public PTOController(PTO pto, GamepadEx gamepad) {
-        this.pto = pto;
+    public IntakeController(Intake intake, GamepadEx gamepad) {
+        this.intake = intake;
         this.gamepad = gamepad;
     }
 
@@ -18,11 +18,11 @@ public class PTOController {
         double leftTrigger = gamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER);
 
         if (rightTrigger > 0.2) {
-            pto.setPower(-rightTrigger);
+            intake.setPower(-rightTrigger);
         } else if (leftTrigger > 0.2) {
-            pto.setPower(leftTrigger);
+            intake.setPower(leftTrigger);
         } else {
-            pto.stop();
+            intake.stop();
         }
     }
 }

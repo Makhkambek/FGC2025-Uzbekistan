@@ -9,16 +9,20 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 import org.firstinspires.ftc.teamcode.Commands.DetectTagCommand;
 
-
 public class VisionController {
+    private final DetectTagCommand detectTagCommand;
+    private final GamepadEx gamepadEx;
+
     public VisionController(Vision vision, Telemetry telemetry, Gamepad gamepad) {
-        GamepadEx gamepadEx = new GamepadEx(gamepad);
+        this.gamepadEx = new GamepadEx(gamepad);
+        this.detectTagCommand = new DetectTagCommand(vision, telemetry, gamepad);
 
-        DetectTagCommand detectTagCommand = new DetectTagCommand(vision, telemetry, gamepad);
-
-        // Schedule on press, cancel on release
-        new Trigger(() -> gamepadEx.getButton(GamepadKeys.Button.X))
+        new Trigger(() -> gamepadEx.getButton(GamepadKeys.Button.LEFT_BUMPER))
                 .whenActive(() -> CommandScheduler.getInstance().schedule(detectTagCommand))
                 .whenInactive(() -> CommandScheduler.getInstance().cancel(detectTagCommand));
+    }
+
+    public void update() {
+
     }
 }

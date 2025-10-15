@@ -8,15 +8,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Controllers.BoxArmController;
 import org.firstinspires.ftc.teamcode.Controllers.ClutchController;
-import org.firstinspires.ftc.teamcode.Controllers.PTOController;
+import org.firstinspires.ftc.teamcode.Controllers.HangController;
 import org.firstinspires.ftc.teamcode.Controllers.ArmIntakeController;
+import org.firstinspires.ftc.teamcode.Controllers.IntakeController;
 import org.firstinspires.ftc.teamcode.Controllers.ResetController;
 import org.firstinspires.ftc.teamcode.Controllers.VisionController;
 import org.firstinspires.ftc.teamcode.SubSystems.BoxArm;
 import org.firstinspires.ftc.teamcode.SubSystems.Clutch;
-import org.firstinspires.ftc.teamcode.SubSystems.PTO;
+import org.firstinspires.ftc.teamcode.SubSystems.Hang;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
 import org.firstinspires.ftc.teamcode.SubSystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.SubSystems.Intake;
 import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 
 @Config
@@ -24,37 +26,40 @@ import org.firstinspires.ftc.teamcode.SubSystems.Vision;
 public class TeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
-        PTO pto = new PTO(hardwareMap);
+        Hang hang = new Hang(hardwareMap);
+        Intake intake = new Intake(hardwareMap);
         ArmIntake armIntake = new ArmIntake(hardwareMap);
         Clutch clutch = new Clutch(hardwareMap);
         BoxArm boxArm = new BoxArm(hardwareMap, clutch);
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
-//        Vision vision = new Vision(hardwareMap);
+        Vision vision = new Vision(hardwareMap);
 
         GamepadEx gamepad1Ex = new GamepadEx(gamepad1);
         GamepadEx gamepad2Ex = new GamepadEx(gamepad2);
 
-        PTOController ptoController = new PTOController(pto, gamepad2Ex);
-//        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
+        HangController hangController = new HangController(hang, gamepad2Ex);
+        IntakeController intakeController = new IntakeController(intake, gamepad1Ex);
+        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
         ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
         BoxArmController boxArmController = new BoxArmController(boxArm, gamepad2Ex);
         ClutchController clutchController = new ClutchController(clutch, gamepad2Ex);
-        ResetController resetController = new ResetController(pto, armIntake, boxArm, clutch, clutchController, gamepad2Ex);
+        ResetController resetController = new ResetController(hang, armIntake, boxArm, clutch, clutchController, gamepad2Ex);
 
         waitForStart();
 
         while (opModeIsActive()) {
             CommandScheduler.getInstance().run();
 
-            ptoController.update();
+            hangController.update();
+            intakeController.update();
             armIntakeController.update();
             clutchController.update();
             boxArmController.update();
-//            visionController.update();
+            visionController.update();
             resetController.update();
 
-            boolean isRightTriggerPressed = gamepad1Ex.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.4;
-            driveTrain.setSlowMode(isRightTriggerPressed);
+            boolean isRightBumperPressed = gamepad1Ex.getButton(GamepadKeys.Button.RIGHT_BUMPER);
+            driveTrain.setSlowMode(isRightBumperPressed);
 
             double drive = gamepad1Ex.getLeftY();
             double turn = gamepad1Ex.getRightX();

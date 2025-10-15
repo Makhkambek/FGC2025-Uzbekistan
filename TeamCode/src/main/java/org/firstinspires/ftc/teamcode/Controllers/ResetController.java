@@ -6,11 +6,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.SubSystems.BoxArm;
 import org.firstinspires.ftc.teamcode.SubSystems.Clutch;
-import org.firstinspires.ftc.teamcode.SubSystems.PTO;
+import org.firstinspires.ftc.teamcode.SubSystems.Hang;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmIntake;
 
 public class ResetController {
-    private final PTO pto;
+    private final Hang hang;
     private final ArmIntake armIntake;
     private final BoxArm boxArm;
     private final Clutch clutch;
@@ -18,8 +18,8 @@ public class ResetController {
     private final GamepadEx gamepad;
     private boolean wasOptionsPressed = false;
 
-    public ResetController(PTO pto, ArmIntake armIntake, BoxArm boxArm, Clutch clutch, ClutchController clutchController, GamepadEx gamepad) {
-        this.pto = pto;
+    public ResetController(Hang hang, ArmIntake armIntake, BoxArm boxArm, Clutch clutch, ClutchController clutchController, GamepadEx gamepad) {
+        this.hang = hang;
         this.armIntake = armIntake;
         this.boxArm = boxArm;
         this.clutch = clutch;
@@ -32,7 +32,7 @@ public class ResetController {
 
         if (isOptionsPressed && !wasOptionsPressed) {
             CommandScheduler.getInstance().cancelAll();
-            pto.stop();
+            hang.stop();
             armIntake.stop();
             boxArm.stop();
             clutch.stop();
