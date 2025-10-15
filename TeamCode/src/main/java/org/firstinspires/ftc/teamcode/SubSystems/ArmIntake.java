@@ -32,6 +32,8 @@ public class ArmIntake extends SubsystemBase {
     private boolean isResetting = false;
     private int resetState = 0;
     private final ElapsedTime resetTimer = new ElapsedTime();
+    private boolean manualMode = false; // New flag for manual control
+    private double manualPower = 0.0; // New variable for manual power
 
     public ArmIntake(HardwareMap hardwareMap) {
         servo3 = hardwareMap.get(CRServo.class, "servo3");
@@ -49,10 +51,16 @@ public class ArmIntake extends SubsystemBase {
         timer.reset();
     }
 
-
-
     public void setTarget(int targetPosition) {
         this.targetPosition = targetPosition;
+    }
+
+    public void setManualMode(boolean manualMode) {
+        this.manualMode = manualMode;
+    }
+
+    public void setManualPower(double power) {
+        this.manualPower = Math.max(-1.0, Math.min(1.0, power)); // Clamp power to [-1.0, 1.0]
     }
 
     public void runGrippers() {
@@ -72,6 +80,7 @@ public class ArmIntake extends SubsystemBase {
 
     public void stop() {
         offGrippers();
+        ArmIntakeMotor.setPower(0.0);
         isResetting = true;
         resetState = 0;
         resetTimer.reset();
@@ -104,6 +113,8 @@ public class ArmIntake extends SubsystemBase {
     public void periodic() {
         if (isResetting) {
             executeReset();
+        } else if (manualMode) {
+            ArmIntakeMotor.setPower(manualPower);
         } else {
             double dt = timer.seconds();
             if (dt < 1e-3) dt = 1e-3;

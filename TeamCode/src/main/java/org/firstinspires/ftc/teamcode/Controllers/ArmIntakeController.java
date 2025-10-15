@@ -11,9 +11,9 @@ public class ArmIntakeController {
     private final GamepadEx gamepad;
     private static final int MAX_POSITION = 165;
     private static final int MIN_POSITION = 0;
-    private static final int LEFT_STICK_TARGET = 80;
-    private static final double JOYSTICK_SCALE_FACTOR = 5.0;
-    private static final double JOYSTICK_DEADZONE = 0.1;
+    private static final int MIDDLE_POSITION = 80;
+    private static final int HIGH_POSITION = 150;
+    private boolean wasDpadDownPressed = false; 
 
     public ArmIntakeController(ArmIntake armIntake, GamepadEx gamepad) {
         this.armIntake = armIntake;
@@ -21,36 +21,36 @@ public class ArmIntakeController {
     }
 
     public void update() {
-        double rightStickY = -gamepad.getRightY();
-        double leftStickY = -gamepad.getLeftY();
-
-        if (Math.abs(leftStickY) > JOYSTICK_DEADZONE) {
+        if (gamepad.getButton(GamepadKeys.Button.Y)) {
             CommandScheduler.getInstance().cancelAll();
             CommandScheduler.getInstance().schedule(
-                    new ArmIntakeCommand(armIntake, LEFT_STICK_TARGET, false, false)
+                    new ArmIntakeCommand(armIntake, HIGH_POSITION, false, false)
+            );
+        } else if (gamepad.getButton(GamepadKeys.Button.A)) {
+            CommandScheduler.getInstance().cancelAll();
+            CommandScheduler.getInstance().schedule(
+                    new ArmIntakeCommand(armIntake, MIN_POSITION, false, false)
             );
         }
 
-        if (Math.abs(rightStickY) > JOYSTICK_DEADZONE) {
-            CommandScheduler.getInstance().cancelAll();
-            int currentTarget = armIntake.getTarget();
-            int delta = (int) (rightStickY * JOYSTICK_SCALE_FACTOR);
-            int newTarget = currentTarget + delta;
-            newTarget = Math.max(MIN_POSITION, Math.min(MAX_POSITION, newTarget));
-            CommandScheduler.getInstance().schedule(
-                    new ArmIntakeCommand(armIntake, newTarget, false, false)
-            );
+        boolean isDpadDownPressed = gamepad.getButton(GamepadKeys.Button.DPAD_DOWN);
+        if (isDpadDownPressed) {
+            armIntake.setManualMode(true);
+            armIntake.setManualPower(-0.2);
+        } else if (wasDpadDownPressed) {
+            armIntake.setManualMode(false);
+            armIntake.setTarget(armIntake.getPosition());
+        } else {
+            armIntake.setManualMode(false);
         }
+        wasDpadDownPressed = isDpadDownPressed;
 
         boolean isDpadPressed = gamepad.getButton(GamepadKeys.Button.DPAD_UP) ||
-                gamepad.getButton(GamepadKeys.Button.DPAD_DOWN) ||
                 gamepad.getButton(GamepadKeys.Button.DPAD_LEFT) ||
                 gamepad.getButton(GamepadKeys.Button.DPAD_RIGHT);
 
-        boolean isRightSideButtonPressed = gamepad.getButton(GamepadKeys.Button.A) ||
-                gamepad.getButton(GamepadKeys.Button.B) ||
-                gamepad.getButton(GamepadKeys.Button.X) ||
-                gamepad.getButton(GamepadKeys.Button.Y);
+        boolean isRightSideButtonPressed = gamepad.getButton(GamepadKeys.Button.X) ||
+                gamepad.getButton(GamepadKeys.Button.B);
 
         if (isDpadPressed) {
             armIntake.retract();

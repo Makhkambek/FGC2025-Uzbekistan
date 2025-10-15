@@ -32,14 +32,14 @@ public class TeleOp extends LinearOpMode {
         Clutch clutch = new Clutch(hardwareMap);
         BoxArm boxArm = new BoxArm(hardwareMap, clutch);
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
-        Vision vision = new Vision(hardwareMap);
+//        Vision vision = new Vision(hardwareMap);
 
         GamepadEx gamepad1Ex = new GamepadEx(gamepad1);
         GamepadEx gamepad2Ex = new GamepadEx(gamepad2);
 
         HangController hangController = new HangController(hang, gamepad2Ex);
         IntakeController intakeController = new IntakeController(intake, gamepad1Ex);
-        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
+//        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
         ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
         BoxArmController boxArmController = new BoxArmController(boxArm, gamepad2Ex);
         ClutchController clutchController = new ClutchController(clutch, gamepad2Ex);
@@ -55,7 +55,7 @@ public class TeleOp extends LinearOpMode {
             armIntakeController.update();
             clutchController.update();
             boxArmController.update();
-            visionController.update();
+//            visionController.update();
             resetController.update();
 
             boolean isRightBumperPressed = gamepad1Ex.getButton(GamepadKeys.Button.RIGHT_BUMPER);

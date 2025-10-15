@@ -32,23 +32,19 @@ public class DetectTagCommand extends CommandBase {
         AprilTagDetection detection = vision.getFirstDetection();
 
         if (detection != null) {
-            //Compute horizontal offset of tag center
             double tagCenterX = (detection.corners[0].x + detection.corners[1].x +
                     detection.corners[2].x + detection.corners[3].x) / 4.0;
 
-            //Assuming 640x480 resolution
             double imageCenterX = 640 / 2.0;
 
-            double offset = tagCenterX - imageCenterX; // pixels left(-) / right(+)
+            double offset = tagCenterX - imageCenterX;
             telemetry.addData("Tag offset (px)", offset);
 
-            // Rumble if aligned within ~20px
             if (Math.abs(offset) < 60 && !hasRumbled) {
-                gamepad.rumble(1.0, 1.0, 500); // full power rumble for 0.5 sec
+                gamepad.rumble(1.0, 1.0, 500);
                 hasRumbled = true;
             }
 
-            // Metadata (if available in your SDK)
             if (detection.metadata != null) {
                 telemetry.addData("Tag size (mm)", detection.metadata.tagsize);
                 telemetry.addData("Field position", detection.metadata.fieldPosition);
