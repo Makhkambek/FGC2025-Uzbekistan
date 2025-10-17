@@ -31,10 +31,14 @@ public class ClutchController {
             }
         }
 
+        if (gamepad.getButton(GamepadKeys.Button.DPAD_UP)) {
+            clutch.partialOpen();
+            leftBumperToggle = 0;
+        }
+
         wasLeftBumperPressed = isLeftBumperPressed;
     }
 
-    // Added method to reset the toggle counter
     public void reset() {
         leftBumperToggle = 0;
         wasLeftBumperPressed = false;

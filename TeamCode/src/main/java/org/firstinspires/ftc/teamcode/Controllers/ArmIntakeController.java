@@ -12,7 +12,7 @@ public class ArmIntakeController {
     private static final int MAX_POSITION = 165;
     private static final int MIN_POSITION = 0;
     private static final int MIDDLE_POSITION = 80;
-    private static final int HIGH_POSITION = 150;
+    private static final int HIGH_POSITION = 170;
     private boolean wasDpadDownPressed = false; 
 
     public ArmIntakeController(ArmIntake armIntake, GamepadEx gamepad) {
@@ -36,7 +36,7 @@ public class ArmIntakeController {
         boolean isDpadDownPressed = gamepad.getButton(GamepadKeys.Button.DPAD_DOWN);
         if (isDpadDownPressed) {
             armIntake.setManualMode(true);
-            armIntake.setManualPower(-0.2);
+            armIntake.setManualPower(-0.5);
         } else if (wasDpadDownPressed) {
             armIntake.setManualMode(false);
             armIntake.setTarget(armIntake.getPosition());
@@ -45,7 +45,7 @@ public class ArmIntakeController {
         }
         wasDpadDownPressed = isDpadDownPressed;
 
-        boolean isDpadPressed = gamepad.getButton(GamepadKeys.Button.DPAD_UP) ||
+        boolean isDpadPressed =
                 gamepad.getButton(GamepadKeys.Button.DPAD_LEFT) ||
                 gamepad.getButton(GamepadKeys.Button.DPAD_RIGHT);
 
@@ -59,6 +59,7 @@ public class ArmIntakeController {
         } else {
             armIntake.offGrippers();
         }
+
 
         armIntake.periodic();
     }

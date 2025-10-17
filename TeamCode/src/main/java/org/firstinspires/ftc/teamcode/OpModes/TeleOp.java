@@ -37,8 +37,8 @@ public class TeleOp extends LinearOpMode {
         GamepadEx gamepad1Ex = new GamepadEx(gamepad1);
         GamepadEx gamepad2Ex = new GamepadEx(gamepad2);
 
-        HangController hangController = new HangController(hang, gamepad2Ex);
-        IntakeController intakeController = new IntakeController(intake, gamepad1Ex);
+        HangController hangController = new HangController(hang, gamepad1Ex);
+        IntakeController intakeController = new IntakeController(intake, gamepad2Ex);
 //        VisionController visionController = new VisionController(vision, telemetry, gamepad1);
         ArmIntakeController armIntakeController = new ArmIntakeController(armIntake, gamepad2Ex);
         BoxArmController boxArmController = new BoxArmController(boxArm, gamepad2Ex);
@@ -65,6 +65,7 @@ public class TeleOp extends LinearOpMode {
             double turn = gamepad1Ex.getRightX();
             driveTrain.tankDrive(drive, turn);
 
+            telemetry.addData("ArmIntake Position: ", armIntake.getPosition());
             telemetry.update();
         }
     }

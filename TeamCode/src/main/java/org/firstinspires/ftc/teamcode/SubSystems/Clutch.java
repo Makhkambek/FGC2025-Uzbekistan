@@ -11,6 +11,7 @@ public class Clutch extends SubsystemBase {
     private static final double SERVO_OPEN = 0.0;
     private static final double SERVO_CLOSED = 1.0;
     private static final double SERVO_INTERMEDIATE = 0.9;
+    private static final double SERVO_PARTIAL_OPEN = 0.1;
 
     public Clutch(HardwareMap hardwareMap) {
         clutchServo_left = hardwareMap.get(Servo.class, "clutchServo_left");
@@ -24,6 +25,11 @@ public class Clutch extends SubsystemBase {
     public void open() {
         clutchServo_left.setPosition(SERVO_OPEN);
         clutchServo_right.setPosition(SERVO_OPEN);
+    }
+
+    public void partialOpen() {
+        clutchServo_left.setPosition(SERVO_PARTIAL_OPEN);
+        clutchServo_right.setPosition(SERVO_PARTIAL_OPEN);
     }
 
     public void intermediate() {

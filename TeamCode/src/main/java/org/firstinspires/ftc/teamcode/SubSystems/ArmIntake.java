@@ -14,10 +14,10 @@ public class ArmIntake extends SubsystemBase {
     public static final int ZERO = 0;
     public static final int TARGET = 150;
 
-    private static final double kP = 0.002;
+    private static final double kP = 0.0045;
     private static final double kI = 0.00;
     private static final double kD = 0.00;
-    private static final double kF = 0.02;
+    private static final double kF = 0.002;
     private static final double INTEGRAL_LIMIT = 50.0;
 
     private static final double GRIPPER_ON = 1.0;
