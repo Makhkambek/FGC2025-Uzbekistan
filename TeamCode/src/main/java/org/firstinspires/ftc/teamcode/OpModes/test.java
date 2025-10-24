@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 @TeleOp
-//@Disabled
+@Disabled
 public class test extends OpMode {
 
 //    private DcMotorEx leftLift;
